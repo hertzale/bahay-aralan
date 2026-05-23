@@ -1,6 +1,6 @@
 // src/components/shared/ProtectedRoute.jsx
 import { Navigate } from 'react-router-dom'
-import { useAuthStore } from '.../lib/store'
+import { useAuthStore } from '../lib/store'
 
 export default function ProtectedRoute({ children, allowedRole }) {
   const { isAuthenticated, user } = useAuthStore()
