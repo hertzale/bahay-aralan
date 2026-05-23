@@ -1,7 +1,7 @@
 // src/components/ui/index.jsx
 // Barrel of reusable UI primitives
 
-import Icon from './components/icon'
+import Icon from '../icon'
 
 // ─── Badge ────────────────────────────────────────────────────
 export function Badge({ status }) {
