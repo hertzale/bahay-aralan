@@ -1,7 +1,7 @@
 // src/pages/caretaker/index.jsx
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import DashboardLayout from '../../components/layout/DashboardLayout'
+import DashboardLayout from '../components/DashboardLayout'
 import { Badge, StatCard, PageHeader, AlertBanner, Icon, Input, Textarea, Select } from '../../components/ui'
 import { ALL_DORMERS, ALL_PAYMENTS, APPLICATIONS, ACTIVITY_LOG, CARETAKER_MAINTENANCE, MONTHS, DORMS } from '../../lib/mockData'
 
