@@ -1,7 +1,7 @@
 // src/pages/public/LandingPage.jsx
 import { useNavigate } from 'react-router-dom'
-import { Icon } from '../../components/ui'
-import { DORMS } from '../../lib/mockData'
+import { Icon } from '../components/ui'
+import { DORMS } from '../lib/mockData'
 
 export default function LandingPage() {
   const navigate = useNavigate()

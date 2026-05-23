@@ -1,8 +1,8 @@
 // src/pages/public/SignInPage.jsx
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuthStore, DEMO_USERS } from '../../lib/store'
-import { Icon, Input, AlertBanner } from '../../components/ui'
+import { useAuthStore, DEMO_USERS } from '../lib/store'
+import { Icon, Input, AlertBanner } from '../components/ui'
 
 export default function SignInPage() {
   const navigate         = useNavigate()
