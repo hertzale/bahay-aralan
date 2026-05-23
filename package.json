@@ -1,0 +1,16 @@
+{
+  "name": "dormlink",
+  "version": "1.0.0",
+  "description": "DormLink — Smart Dormitory Management System for Filipino students",
+  "scripts": {
+    "start": "npx serve . -l 3000",
+    "dev": "npx live-server --port=3000 --open=dormlink.html"
+  },
+  "keywords": ["dormitory", "management", "students", "philippines"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.3",
+    "live-server": "^1.2.2"
+  }
+}
