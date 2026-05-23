@@ -35,8 +35,8 @@ export default function LandingPage() {
         </div>
 
         <h1 className="font-display font-bold" style={{ color:'var(--cream)', fontSize:'clamp(2.8rem,7vw,5.5rem)', lineHeight:1.05, marginBottom:24, maxWidth:800, letterSpacing:'-0.02em' }}>
-          Ang Iyong Tahanan<br />
-          <span style={{ color:'var(--sand)' }}>sa Paaralan</span>
+          BAHAY-ARALAN:<br />
+          <span style={{ color:'var(--sand)' }}>Home Away From Home</span>
         </h1>
 
         <p style={{ color:'rgba(243,239,233,.72)', fontSize:'1.2rem', maxWidth:520, lineHeight:1.65, marginBottom:40, fontFamily:"'Crimson Pro',serif" }}>
@@ -45,10 +45,10 @@ export default function LandingPage() {
 
         <div className="flex items-center gap-4">
           <button className="btn btn-primary btn-lg" style={{ background:'var(--sand)', color:'var(--dark)' }} onClick={() => navigate('/register')}>
-            Mag-register Na
+            Register Now
           </button>
           <button className="btn btn-secondary btn-lg" style={{ color:'var(--cream)', borderColor:'rgba(224,193,164,.45)' }} onClick={() => navigate('/signin')}>
-            Mag-sign In
+            Sign In
           </button>
         </div>
 
@@ -88,7 +88,7 @@ export default function LandingPage() {
       </div>
 
       <footer style={{ textAlign:'center', padding:16, color:'rgba(243,239,233,.35)', fontSize:13, fontFamily:"'DM Mono',monospace", letterSpacing:'0.04em', position:'relative', zIndex:2 }}>
-        © 2025 BAHAY-ARALAN — PARA SA MGA ESTUDYANTE
+        © 2025 BAHAY-ARALAN 
       </footer>
     </div>
   )

@@ -53,7 +53,7 @@ export default function SignInPage() {
             <span className="font-display font-bold text-xl" style={{ color:'var(--cream)' }}>Bahay-Aralan</span>
           </div>
           <h2 className="font-display font-bold" style={{ color:'var(--cream)', fontSize:'3rem', lineHeight:1.1, marginBottom:16 }}>
-            Maligayang<br />Pagbabalik. 🏠
+            Maligayang<br />Pagbabalik! 
           </h2>
           <p style={{ color:'rgba(243,239,233,.7)', fontSize:'1.1rem', maxWidth:320, lineHeight:1.6 }}>
             Sign in to access your personalized dashboard and manage your dormitory experience.
@@ -96,7 +96,7 @@ export default function SignInPage() {
           {err && <AlertBanner type="danger">{err}</AlertBanner>}
 
           <div style={{ display:'flex', flexDirection:'column', gap:16, marginBottom:16 }}>
-            <Input label="Email Address" type="email" value={form.email} onChange={f('email')} placeholder="ikaw@example.com" error={errors.email} required />
+            <Input label="Email Address" type="email" value={form.email} onChange={f('email')} placeholder="email@example.com" error={errors.email} required />
             <Input label="Password" type="password" value={form.password} onChange={f('password')} placeholder="••••••••" error={errors.password} required />
           </div>
 
