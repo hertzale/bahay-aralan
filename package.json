@@ -1,7 +1,6 @@
 {
-  "name": "dormlink",
+  "name": "bahay-aralan",
   "version": "1.0.0",
-  "description": "DormLink — Smart Dormitory Management System",
   "type": "module",
   "scripts": {
     "dev": "vite",
