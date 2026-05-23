@@ -1,8 +1,8 @@
 // src/components/layout/DashboardLayout.jsx
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { useAuthStore } from '../../lib/store'
-import { Icon } from '../ui'
+import { useAuthStore } from '../lib/store'
+import { Icon } from './ui'
 
 // ─── Menu definitions ──────────────────────────────────────────
 const MENUS = {
