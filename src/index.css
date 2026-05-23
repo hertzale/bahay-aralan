@@ -2,4 +2,102 @@
 @tailwind components;
 @tailwind utilities;
 
-/* your other styles below */
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  --cream:  #f3efe9;
+  --ivory:  #faf8f5;
+  --sand:   #e0c1a4;
+  --khaki:  #ad8d6d;
+  --mocha:  #695e3b;
+  --dark:   #2a2118;
+  --navy:   #4c6b8e;
+  --forest: #4f522c;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Crimson Pro', Georgia, serif; background: var(--cream); color: var(--dark); }
+
+.font-display { font-family: 'Crimson Pro', Georgia, serif; }
+.font-body    { font-family: 'Crimson Pro', Georgia, serif; }
+.font-mono    { font-family: 'DM Mono', monospace; }
+
+/* Cards */
+.card { background: var(--ivory); border: 1px solid rgba(224,193,164,.3); border-radius: 14px; }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: 9px; border: 1.5px solid transparent; font-family: 'Crimson Pro', serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: opacity .15s; }
+.btn:hover { opacity: .85; }
+.btn-primary { background: var(--dark); color: var(--cream); border-color: var(--dark); }
+.btn-secondary { background: transparent; color: var(--dark); border-color: rgba(173,141,109,.5); }
+.btn-danger   { background: #b91c1c; color: #fff; border-color: #b91c1c; }
+.btn-sm { padding: 6px 13px; font-size: 13px; border-radius: 7px; }
+.btn-lg { padding: 13px 28px; font-size: 17px; border-radius: 10px; }
+
+/* Inputs */
+.label { display: block; font-size: 13px; font-weight: 600; color: var(--dark); margin-bottom: 5px; font-family: 'DM Mono', monospace; letter-spacing: .04em; text-transform: uppercase; }
+.input { width: 100%; padding: 10px 13px; border: 1.5px solid rgba(173,141,109,.35); border-radius: 9px; background: var(--ivory); font-family: 'Crimson Pro', serif; font-size: 15px; color: var(--dark); outline: none; transition: border-color .15s; }
+.input:focus { border-color: var(--navy); }
+.input.error  { border-color: #b91c1c; }
+
+/* Badges */
+.badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; font-family: 'DM Mono', monospace; text-transform: capitalize; }
+.badge-paid       { background: rgba(79,82,44,.12);  color: var(--forest); }
+.badge-verified   { background: rgba(79,82,44,.12);  color: var(--forest); }
+.badge-approved   { background: rgba(79,82,44,.12);  color: var(--forest); }
+.badge-resolved   { background: rgba(79,82,44,.12);  color: var(--forest); }
+.badge-unpaid     { background: rgba(185,28,28,.1);  color: #b91c1c; }
+.badge-rejected   { background: rgba(185,28,28,.1);  color: #b91c1c; }
+.badge-high       { background: rgba(185,28,28,.1);  color: #b91c1c; }
+.badge-pending    { background: rgba(173,141,109,.15); color: var(--khaki); }
+.badge-moderate   { background: rgba(173,141,109,.15); color: var(--khaki); }
+.badge-in-progress { background: rgba(76,107,142,.12); color: var(--navy); }
+.badge-low        { background: rgba(76,107,142,.12); color: var(--navy); }
+.badge-info       { background: rgba(76,107,142,.12); color: var(--navy); }
+
+/* Sidebar */
+.sidebar { width: 230px; background: var(--dark); min-height: 100vh; display: flex; flex-direction: column; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 9px; color: rgba(243,239,233,.6); font-size: 14px; font-weight: 500; cursor: pointer; transition: all .15s; margin-bottom: 2px; }
+.nav-item:hover  { background: rgba(243,239,233,.08); color: var(--cream); }
+.nav-item.active { background: rgba(243,239,233,.13); color: var(--cream); }
+
+/* Tables */
+.table-wrapper { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; padding: 10px 14px; font-size: 11px; font-family: 'DM Mono', monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--mocha); border-bottom: 1px solid rgba(224,193,164,.3); }
+td { padding: 12px 14px; font-size: 14px; border-bottom: 1px solid rgba(224,193,164,.15); }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(224,193,164,.06); }
+
+/* Filter bar */
+.filter-bar { display: flex; align-items: center; gap: 10px; background: var(--ivory); border: 1px solid rgba(224,193,164,.3); border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; flex-wrap: wrap; }
+.filter-select { border: 1px solid rgba(173,141,109,.3); border-radius: 7px; padding: 5px 10px; font-family: 'Crimson Pro', serif; font-size: 14px; color: var(--dark); background: var(--cream); outline: none; }
+
+/* Overlay / Modal */
+.overlay { position: fixed; inset: 0; background: rgba(42,33,24,.5); z-index: 50; display: flex; align-items: center; justify-content: center; padding: 24px; }
+.modal   { background: var(--ivory); border-radius: 16px; padding: 28px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; }
+
+/* Alert banners */
+.alert-success { background: rgba(79,82,44,.1);  color: var(--forest); border: 1px solid rgba(79,82,44,.2); }
+.alert-info    { background: rgba(76,107,142,.1); color: var(--navy);   border: 1px solid rgba(76,107,142,.2); }
+.alert-warning { background: rgba(173,141,109,.15); color: var(--mocha); border: 1px solid rgba(173,141,109,.3); }
+.alert-danger  { background: rgba(185,28,28,.1); color: #b91c1c;  border: 1px solid rgba(185,28,28,.2); }
+
+/* Icon tints */
+.icon-dark   { background: rgba(42,33,24,.1);   color: var(--dark);   }
+.icon-navy   { background: rgba(76,107,142,.12); color: var(--navy);   }
+.icon-forest { background: rgba(79,82,44,.12);   color: var(--forest); }
+.icon-mocha  { background: rgba(105,94,59,.12);  color: var(--mocha);  }
+.icon-red    { background: rgba(185,28,28,.1);   color: #b91c1c;       }
+.icon-khaki  { background: rgba(173,141,109,.15);color: var(--khaki);  }
+
+/* Hero */
+.hero-bg { background: linear-gradient(135deg, var(--dark) 0%, #3a2d1f 50%, #1e2a3a 100%); }
+.hero-content { position: relative; z-index: 2; }
+.hero-nav-link { color: rgba(243,239,233,.7); font-family: 'Crimson Pro', serif; font-size: 15px; background: none; border: none; cursor: pointer; }
+.hero-nav-link:hover { color: var(--cream); }
+.ornament { position: absolute; opacity: .05; pointer-events: none; z-index: 1; }
+
+/* Animations */
+.page-enter { animation: fadeUp .25s ease; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }

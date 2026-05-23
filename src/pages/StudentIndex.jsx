@@ -1,122 +1,190 @@
-// src/pages/public/SignInPage.jsx
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuthStore, DEMO_USERS } from '../../lib/store'
-import { Icon, Input, AlertBanner } from '../../components/ui'
+import DashboardLayout from '../components/DashboardLayout'
+import { Badge, StatCard, PageHeader, Modal, Input, Textarea, Select, AlertBanner, Icon } from '../components/ui'
+import { DORMS, MY_PAYMENTS, MY_MAINTENANCE, NOTIFICATIONS } from '../lib/mockData'
 
-export default function SignInPage() {
-  const navigate         = useNavigate()
-  const { login }        = useAuthStore()
-  const [form, setForm]  = useState({ email: '', password: '' })
-  const [errors, setErrors] = useState({})
-  const [loading, setLoading] = useState(false)
-  const [err, setErr]    = useState('')
+function StudentLayout({ pageLabel, notifCount, children }) {
+  return (
+    <DashboardLayout role="student" pageLabel={pageLabel} notifCount={notifCount}>
+      <div className="page-enter">{children}</div>
+    </DashboardLayout>
+  )
+}
 
-  const f = (k) => (e) => setForm((v) => ({ ...v, [k]: e.target.value }))
+export function StudentDashboard() {
+  const navigate = useNavigate()
+  const unread = NOTIFICATIONS.filter(n => !n.read).length
+  return (
+    <StudentLayout pageLabel="Dashboard" notifCount={unread}>
+      <PageHeader title="My Dashboard" subtitle="Magnolia Residences — Room 201" />
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:16, marginBottom:24 }}>
+        <StatCard icon="building" label="Current Dorm"   value="Magnolia" sub="Room 201"         iconClass="icon-navy"   />
+        <StatCard icon="card"    label="Rent Status"    value="Paid"     sub="May 2025"           iconClass="icon-forest" />
+        <StatCard icon="wrench"  label="Maintenance"    value="2"        sub="open requests"      iconClass="icon-mocha"  />
+        <StatCard icon="bell"    label="Notifications"  value={unread}   sub="unread"             iconClass="icon-red"    onClick={() => navigate('/student/notifications')} />
+      </div>
+      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:20 }}>
+        <div className="card" style={{ padding:20 }}>
+          <p className="font-display font-bold mb-3" style={{ color:'var(--dark)' }}>Recent Payments</p>
+          {MY_PAYMENTS.slice(0,3).map(p => (
+            <div key={p.id} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'10px 0', borderBottom:'1px solid rgba(224,193,164,.2)' }}>
+              <div><p style={{ fontWeight:600, fontSize:14 }}>{p.month}</p><p style={{ fontSize:12, color:'var(--mocha)', fontFamily:"'DM Mono',monospace" }}>{p.ref}</p></div>
+              <div style={{ textAlign:'right' }}><p style={{ fontWeight:600, fontFamily:"'DM Mono',monospace" }}>₱{p.amount.toLocaleString()}</p><Badge status={p.status} /></div>
+            </div>
+          ))}
+        </div>
+        <div className="card" style={{ padding:20 }}>
+          <p className="font-display font-bold mb-3" style={{ color:'var(--dark)' }}>Maintenance Requests</p>
+          {MY_MAINTENANCE.map(m => (
+            <div key={m.id} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'10px 0', borderBottom:'1px solid rgba(224,193,164,.2)' }}>
+              <div><p style={{ fontWeight:600, fontSize:14 }}>{m.type}</p><p style={{ fontSize:13, color:'var(--mocha)' }}>{m.issue}</p></div>
+              <Badge status={m.status} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </StudentLayout>
+  )
+}
 
-  const validate = () => {
-    const e = {}
-    if (!form.email) e.email = 'Email is required'
-    else if (!/\S+@\S+\.\S+/.test(form.email)) e.email = 'Enter a valid email'
-    if (!form.password) e.password = 'Password is required'
-    else if (form.password.length < 6) e.password = 'Minimum 6 characters'
-    return e
-  }
+export function DormSearchPage() {
+  const [search, setSearch] = useState('')
+  const [maxPrice, setMaxPrice] = useState('')
+  const filtered = DORMS.filter(d =>
+    d.name.toLowerCase().includes(search.toLowerCase()) &&
+    (!maxPrice || d.price <= Number(maxPrice))
+  )
+  return (
+    <StudentLayout pageLabel="Browse Units">
+      <PageHeader title="Browse Dorm Units" subtitle="Find the right place for you" />
+      <div className="filter-bar">
+        <Icon name="search" size={14} style={{ color:'var(--mocha)' }} />
+        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search dorms…" className="filter-select" style={{ flex:1 }} />
+        <input type="number" value={maxPrice} onChange={e => setMaxPrice(e.target.value)} placeholder="Max price (₱)" className="filter-select" style={{ width:160 }} />
+      </div>
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))', gap:18 }}>
+        {filtered.map(d => (
+          <div key={d.id} className="card" style={{ padding:0, overflow:'hidden' }}>
+            <div style={{ height:90, background:`linear-gradient(135deg,${d.colorA},${d.colorB})`, display:'flex', alignItems:'center', justifyContent:'center' }}>
+              <Icon name="building" size={36} style={{ color:'rgba(243,239,233,.4)' }} />
+            </div>
+            <div style={{ padding:18 }}>
+              <p className="font-display font-bold" style={{ fontSize:17, color:'var(--dark)', marginBottom:4 }}>{d.name}</p>
+              <p style={{ fontSize:13, color:'var(--mocha)', marginBottom:10 }}>{d.address}</p>
+              <div style={{ display:'flex', flexWrap:'wrap', gap:6, marginBottom:12 }}>
+                {d.amenities.slice(0,4).map(a => (
+                  <span key={a} style={{ background:'rgba(76,107,142,.1)', color:'var(--navy)', fontSize:11, padding:'3px 8px', borderRadius:5, fontFamily:"'DM Mono',monospace" }}>{a}</span>
+                ))}
+              </div>
+              <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+                <span style={{ fontFamily:"'DM Mono',monospace", fontWeight:700, fontSize:16, color:'var(--dark)' }}>₱{d.price.toLocaleString()}/mo</span>
+                <span style={{ fontSize:12, color: d.slots-d.occupied > 3 ? 'var(--forest)' : '#b91c1c', fontFamily:"'DM Mono',monospace" }}>{d.slots-d.occupied} slots left</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </StudentLayout>
+  )
+}
+
+export function StudentPaymentsPage() {
+  return (
+    <StudentLayout pageLabel="Payments">
+      <PageHeader title="My Payments" subtitle="Monthly rent payment history" />
+      <div className="card" style={{ overflow:'hidden' }}>
+        <div className="table-wrapper">
+          <table>
+            <thead><tr>{['Month','Amount','Reference','Date','Status'].map(h => <th key={h}>{h}</th>)}</tr></thead>
+            <tbody>{MY_PAYMENTS.map(p => (
+              <tr key={p.id}>
+                <td style={{ fontWeight:600 }}>{p.month}</td>
+                <td className="font-mono" style={{ fontWeight:600 }}>₱{p.amount.toLocaleString()}</td>
+                <td style={{ fontFamily:"'DM Mono',monospace", fontSize:13 }}>{p.ref}</td>
+                <td style={{ fontSize:13, color:'var(--mocha)' }}>{p.date}</td>
+                <td><Badge status={p.status} /></td>
+              </tr>
+            ))}</tbody>
+          </table>
+        </div>
+      </div>
+    </StudentLayout>
+  )
+}
+
+export function StudentMaintenancePage() {
+  const [open, setOpen] = useState(false)
+  const [requests, setRequests] = useState(MY_MAINTENANCE)
+  const [form, setForm] = useState({ type:'', issue:'', description:'' })
+  const [done, setDone] = useState(false)
+  const f = k => e => setForm(v => ({ ...v, [k]: e.target.value }))
 
   const submit = () => {
-    const e = validate()
-    if (Object.keys(e).length) { setErrors(e); return }
-    setLoading(true); setErr('')
-    setTimeout(() => {
-      const user = DEMO_USERS[form.email]
-      if (user && form.password.length >= 6) {
-        login(user, 'mock-token-' + user.id)
-        const paths = { student:'/student', caretaker:'/caretaker', owner:'/owner', admin:'/admin' }
-        navigate(paths[user.role])
-      } else {
-        setErr('Invalid email or password.')
-        setLoading(false)
-      }
-    }, 800)
+    if (!form.type || !form.issue) return
+    setRequests(v => [{ id: Date.now(), ...form, date:'Today', status:'pending' }, ...v])
+    setForm({ type:'', issue:'', description:'' })
+    setOpen(false); setDone(true)
+    setTimeout(() => setDone(false), 3000)
   }
 
   return (
-    <div style={{ minHeight:'100vh', display:'flex', background:'var(--cream)' }}>
-      {/* Left panel */}
-      <div className="hero-bg hidden md:flex flex-col justify-center" style={{ flex:'0 0 45%', padding:'60px 56px', position:'relative', overflow:'hidden' }}>
-        <div className="ornament" style={{ fontSize:300, top:-80, right:-60, color:'var(--cream)', transform:'rotate(-15deg)' }}>⌂</div>
-        <div style={{ position:'relative', zIndex:2 }}>
-          <div className="flex items-center gap-2.5 mb-10">
-            <div style={{ width:36, height:36, background:'var(--sand)', borderRadius:10, display:'flex', alignItems:'center', justifyContent:'center' }}>
-              <Icon name="building" size={18} style={{ color:'var(--dark)' }} />
+    <StudentLayout pageLabel="Maintenance">
+      <PageHeader title="Maintenance Requests" subtitle="Report issues in your room"
+        action={<button className="btn btn-primary btn-sm" onClick={() => setOpen(true)}><Icon name="plus" size={14} />New Request</button>} />
+      {done && <AlertBanner type="success">Request submitted!</AlertBanner>}
+      <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
+        {requests.map(r => (
+          <div key={r.id} className="card" style={{ padding:18, display:'flex', justifyContent:'space-between', alignItems:'flex-start' }}>
+            <div>
+              <p style={{ fontWeight:600, fontSize:15, color:'var(--dark)' }}>{r.type} — {r.issue}</p>
+              <p style={{ fontSize:13, color:'var(--mocha)', marginTop:3 }}>{r.description}</p>
+              <p style={{ fontSize:12, color:'var(--sand)', fontFamily:"'DM Mono',monospace", marginTop:5 }}>{r.date}</p>
             </div>
-            <span className="font-display font-bold text-xl" style={{ color:'var(--cream)' }}>Bahay-Aralan</span>
+            <Badge status={r.status} />
           </div>
-          <h2 className="font-display font-bold" style={{ color:'var(--cream)', fontSize:'3rem', lineHeight:1.1, marginBottom:16 }}>
-            Maligayang<br />Pagbabalik. 🏠
-          </h2>
-          <p style={{ color:'rgba(243,239,233,.7)', fontSize:'1.1rem', maxWidth:320, lineHeight:1.6 }}>
-            Sign in to access your personalized dashboard and manage your dormitory experience.
-          </p>
-          <div style={{ marginTop:36, display:'flex', flexDirection:'column', gap:12 }}>
-            {['Secure role-based access','Real-time notifications','Mobile-friendly design'].map((t, i) => (
-              <div key={i} className="flex items-center gap-3" style={{ color:'rgba(243,239,233,.8)', fontSize:'1rem' }}>
-                <div style={{ width:20, height:20, background:'var(--sand)', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
-                  <Icon name="check" size={11} style={{ color:'var(--dark)' }} />
-                </div>{t}
+        ))}
+      </div>
+      <Modal open={open} onClose={() => setOpen(false)} title="Submit Maintenance Request">
+        <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
+          <Select label="Type" value={form.type} onChange={f('type')} required>
+            <option value="">Select type...</option>
+            {['Plumbing','Electrical','HVAC','Furniture','Internet','Other'].map(t => <option key={t}>{t}</option>)}
+          </Select>
+          <Input label="Issue Summary" value={form.issue} onChange={f('issue')} placeholder="e.g. Broken faucet" required />
+          <Textarea label="Description" value={form.description} onChange={f('description')} rows={3} placeholder="Describe the problem..." />
+          <button className="btn btn-primary" style={{ width:'100%' }} onClick={submit}>Submit Request</button>
+        </div>
+      </Modal>
+    </StudentLayout>
+  )
+}
+
+export function StudentNotificationsPage() {
+  const [notifs, setNotifs] = useState(NOTIFICATIONS)
+  const markAll = () => setNotifs(v => v.map(n => ({ ...n, read: true })))
+  return (
+    <StudentLayout pageLabel="Notifications" notifCount={notifs.filter(n => !n.read).length}>
+      <PageHeader title="Notifications" subtitle={`${notifs.filter(n=>!n.read).length} unread`}
+        action={<button className="btn btn-secondary btn-sm" onClick={markAll}>Mark all read</button>} />
+      <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+        {notifs.map(n => (
+          <div key={n.id} className="card" style={{ padding:16, display:'flex', gap:14, alignItems:'flex-start', opacity: n.read ? 0.7 : 1 }}
+            onClick={() => setNotifs(v => v.map(x => x.id===n.id ? {...x,read:true} : x))}>
+            <div style={{ width:38, height:38, borderRadius:10, background: n.type==='success'?'rgba(79,82,44,.15)':n.type==='warning'?'rgba(173,141,109,.15)':'rgba(76,107,142,.15)', color: n.type==='success'?'var(--forest)':n.type==='warning'?'var(--khaki)':'var(--navy)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+              <Icon name={n.type==='success'?'check':n.type==='warning'?'alert':'bell'} size={17} />
+            </div>
+            <div style={{ flex:1 }}>
+              <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start' }}>
+                <p style={{ fontWeight:600, color:'var(--dark)', fontSize:15 }}>{n.title}</p>
+                {!n.read && <span style={{ width:8, height:8, background:'var(--navy)', borderRadius:'50%', flexShrink:0, marginTop:5 }} />}
               </div>
-            ))}
-          </div>
-          {/* Demo credentials hint */}
-          <div style={{ marginTop:32, background:'rgba(243,239,233,.1)', borderRadius:10, padding:'12px 14px', border:'1px solid rgba(243,239,233,.15)' }}>
-            <p style={{ color:'var(--sand)', fontSize:12, fontFamily:"'DM Mono',monospace", marginBottom:8, letterSpacing:'0.08em', textTransform:'uppercase' }}>Demo Logins</p>
-            {Object.entries(DEMO_USERS).map(([email, u]) => (
-              <p key={email} style={{ color:'rgba(243,239,233,.7)', fontSize:13, marginBottom:2 }}>
-                <span style={{ color:'var(--sand)' }}>{u.role}:</span> {email}
-              </p>
-            ))}
-            <p style={{ color:'rgba(243,239,233,.5)', fontSize:12, marginTop:6 }}>any password (6+ chars)</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Right panel */}
-      <div style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}>
-        <div style={{ width:'100%', maxWidth:400 }}>
-          <div className="md:hidden flex items-center gap-2 mb-8">
-            <div style={{ width:30, height:30, background:'var(--dark)', borderRadius:8, display:'flex', alignItems:'center', justifyContent:'center' }}>
-              <Icon name="building" size={15} style={{ color:'var(--cream)' }} />
+              <p style={{ fontSize:13, color:'var(--mocha)', marginTop:2 }}>{n.message}</p>
+              <p style={{ fontSize:12, color:'var(--sand)', fontFamily:"'DM Mono',monospace", marginTop:4 }}>{n.time}</p>
             </div>
-            <span className="font-display font-bold text-lg" style={{ color:'var(--dark)' }}>Bahay-Aralan</span>
           </div>
-
-          <h3 className="font-display font-bold" style={{ color:'var(--dark)', fontSize:'1.7rem', marginBottom:4 }}>Sign In</h3>
-          <p style={{ color:'var(--mocha)', fontSize:'1rem', marginBottom:28 }}>Enter your credentials to continue</p>
-
-          {err && <AlertBanner type="danger">{err}</AlertBanner>}
-
-          <div style={{ display:'flex', flexDirection:'column', gap:16, marginBottom:16 }}>
-            <Input label="Email Address" type="email" value={form.email} onChange={f('email')} placeholder="ikaw@example.com" error={errors.email} required />
-            <Input label="Password" type="password" value={form.password} onChange={f('password')} placeholder="••••••••" error={errors.password} required />
-          </div>
-
-          <div style={{ display:'flex', justifyContent:'flex-end', marginBottom:22 }}>
-            <button style={{ color:'var(--navy)', fontSize:14, fontFamily:"'Crimson Pro',serif" }} className="hover:underline">Forgot password?</button>
-          </div>
-
-          <button className="btn btn-primary" style={{ width:'100%', fontSize:17, padding:13 }} onClick={submit} disabled={loading}>
-            {loading ? 'Signing in…' : 'Sign In →'}
-          </button>
-
-          <p style={{ textAlign:'center', marginTop:20, fontSize:'0.95rem', color:'var(--mocha)' }}>
-            No account yet?{' '}
-            <button style={{ color:'var(--navy)', fontWeight:600 }} className="hover:underline" onClick={() => navigate('/register')}>Register here</button>
-          </p>
-          <p style={{ textAlign:'center', marginTop:10, fontSize:13 }}>
-            <button style={{ color:'var(--mocha)' }} className="hover:underline" onClick={() => navigate('/')}>← Back to home</button>
-          </p>
-        </div>
+        ))}
       </div>
-    </div>
+    </StudentLayout>
   )
 }
